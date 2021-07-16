@@ -1,0 +1,48 @@
+<div class="wrapper">
+  <ng-container
+    *ngTemplateOutlet="kinderkomponent; context: { $implicit: data }"
+  >
+  </ng-container>
+</div>
+
+<ng-template #kinderkomponent let-kind>
+  <ng-container *ngFor="let item of kind">
+    <ng-container *ngTemplateOutlet="kinders; context: { $implicit: item }">
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #kinders let-kinders>
+  <ul>
+    <li class="element">
+      <div class="element__info">
+        <span *ngIf="kinders?.termHtml" [innerHTML]="kinders.termHtml"></span>
+        <span *ngIf="!kinders.termHtml">term: {{ kinders.term }}</span>
+        <span *ngIf="kinders?.count">count: {{ kinders.count }}</span>
+      </div>
+      <button
+        *ngIf="kinders.children && !kinders.condition"
+        (click)="toggle(kinders)"
+      >
+        +
+      </button>
+      <button *ngIf="kinders.condition" (click)="toggle(kinders)">
+        -
+      </button>
+    </li>
+    <ul
+      *ngIf="kinders?.children"
+      [class.hidden]="
+        !kinders.hasOwnProperty('condition') || kinders.condition === false
+      "
+    >
+      <ng-container
+        *ngTemplateOutlet="
+          kinderkomponent;
+          context: { $implicit: kinders.children }
+        "
+      >
+      </ng-container>
+    </ul>
+  </ul>
+</ng-template>
